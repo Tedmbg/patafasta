@@ -1,0 +1,97 @@
+body{
+    background-color:black;
+    margin: 0;
+    padding: 0;
+}
+.form-container{
+    display: flex;
+    justify-content: space-around;
+    margin-left:10px;
+    margin-right: 10px;
+}
+.logo{
+    margin-top: 2.5rem;
+    /* border: 2px solid black; */
+    height: 90vh;
+    width: 42.125rem;
+    background:url("/images/logo.png");
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.form-design{
+    position :relative;
+    margin-top: 6.5rem;
+    height: 70vh;
+    width:30.125rem;
+    background:url("/images/form-design.png");
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.toggle-buttons{
+    top: 4.0rem;
+    position: absolute;
+    left:1.5625rem;
+    display: flex;
+    gap:30px;
+    border:none;
+}
+.active-button {
+    background-color: #007bff;
+    color: white;
+    position: relative;
+    border-bottom: 5px solid white;
+    border-radius: 10px;
+}
+.not-active{
+    color:darkgrey;
+}
+h2{
+    text-align: center;
+    position: relative;
+    top: 9.475rem;
+    color:white;
+}
+.form-layout{
+    position :relative;
+    top:12rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form-group{
+    display:flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.form-group label {
+    display: block;
+    font-size: 1.1em;
+    color: white;
+    text-align: left;
+}
+.form-group ion-icon {
+    color: #ccc;
+}
+input[type="email"],
+input[type="password"] {
+    width: calc(100% - 10px);
+    padding: 10px 10px 10px 10px;
+    border-radius: 20px;
+    border: none;
+    margin-top: 5px;
+    background-color: white;
+}
+.submit-btn{
+    margin-top: 10px;
+    padding: 10px 10px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    width: 51%;
+    font-size: 1.1em;
+    background: #f0ad4e;
+    color:black;
+}
