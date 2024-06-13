@@ -1,0 +1,57 @@
+.card {
+    margin-bottom: 15px;
+    padding: 10px;
+    box-shadow: 5px 5px 5px grey;
+    margin-top: 30px;
+}
+.map-container {
+    height: 80vh;
+    background-image: url('./assets/map.png'); /* Replace with your static map image */
+    background-size: cover;
+    background-position: center;
+}
+.status-badge {
+    display: inline-block;
+    padding: 0.5em 1em;
+    border-radius: 10px;
+    color: #fff;
+}
+.status-in-delivery { background-color: green; }
+.status-in-transit { background-color: blue; }
+.status-pending { background-color: orange; }
+.card-body {
+    display: flex;
+    align-items: center;
+}
+
+h6{
+color: grey;
+}
+.icon{
+    width: 34px;
+    height: 34px;
+
+}
+.list-group{
+margin-top: 30px;
+box-shadow: 5px 3px 3px grey;
+}
+.car-icon {
+width: 80px; /* Adjust the size as needed */
+height: auto; /* Maintain aspect ratio */
+border-radius: 5px; /* Border radius of 5 pixels */
+margin-right: 10px; /* Space between the image and text */
+}
+
+.list-group-item {
+display: flex;
+align-items: center;
+}
+
+.list-group-item .badge {
+margin-left: auto; /* Push the badge to the right */
+}
+
+.status-in-delivery { background-color: green; }
+.status-in-transit { background-color: blue; }
+.status-pending { background-color: orange; }
