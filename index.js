@@ -18,17 +18,18 @@ app.use(
     secret: "key", // replace with your secret key
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 600000 }, // set to imin
+    cookie: { maxAge: 6000000 }, // set to imin
   })
 );
 
 // access to static files
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // to parse JSON bodies
 app.use(express.static("public"));
 
 // path to the json files
 const userFilePath = path.join(__dirname, "data", "users.json");
-const carFilePath = path.join(__dirname, "data", "cars.json");
+const assignmentsFilePath = path.join(__dirname, 'data', 'cars.json');
 
 // Load JSON data
 async function loadJson(filePath) {
@@ -46,80 +47,161 @@ app.get("/", (req, res) => {
 
 //home page
 app.get("/home", (req, res) => {
-    const name = req.session.user ? req.session.user.name : null;// this is an if statement
+    const name = req.session.user ? req.session.user.name : null; // this is an if statement
     const sessionID = req.sessionID;
     const role = req.session.user ? req.session.user.role : null;
     let btn_value = "Deliveries";
-    if(role === 'Admin'){
+    if (role === 'Admin') {
         btn_value = "Dashboard";
-    }else{
+    } else {
         btn_value = "Deliveries";
     }
     console.log(`this is the sessionID ${sessionID} and this is the role ,${role}`);
-  res.render("index.ejs",{name:name,
-    btn_value:btn_value
-  });
+    res.render("index.ejs", { name: name, btn_value: btn_value });
 });
 
 // delivery page.
-app.get("/delivery", (req, res) => {
-    const role = req.session.user ? req.session.user.role : null; // here we are geting user role.
+app.get("/delivery", async (req, res) => {
+    const role = req.session.user ? req.session.user.role : null;
+    const driverName = req.session.user ? req.session.user.name : null;
     console.log(`This is the user role,${role}`);
-   if(role === "Admin"){
-    res.render("dashboard.ejs");
-   } else{
-    res.render("delivery.ejs");
-   }
+    const assignments = await loadJson(assignmentsFilePath);
+
+    if (role === "Admin") {
+        res.redirect("/dashboard");
+    } else {
+        const driverAssignments = assignments.assignments.filter(
+            (assignment) => assignment.driver === driverName
+        );
+        res.render("delivery.ejs", {
+            assignments: driverAssignments,
+            driverName: driverName,
+        });
+    }
 });
 
+// Route to update status
+// Route to update status
+app.post('/update-status', async (req, res) => {
+    const { id, status } = req.body;
+
+    let assignments = await loadJson(assignmentsFilePath);
+
+    if (!assignments || !assignments.assignments) {
+        console.error('Assignments data not found or invalid.');
+        return res.json({ success: false });
+    }
+
+    // Find the assignment by ID and update its status
+    let assignment = assignments.assignments.find(a => a.id === id);
+    if (assignment) {
+        assignment.status = status;
+        assignment.type = status;  // Assuming `type` should also be updated
+
+        // Save the updated assignments back to the JSON file
+        try {
+            await fs.writeJson(assignmentsFilePath, assignments, { spaces: 2 });
+            res.json({ success: true });
+        } catch (error) {
+            console.error('Error writing to JSON file:', error);
+            res.json({ success: false });
+        }
+    } else {
+        console.error(`Assignment with ID ${id} not found.`);
+        res.json({ success: false });
+    }
+});
+
+
+//dashboard route
+app.get("/dashboard", async (req, res) => {
+    const name = req.session.user ? req.session.user.name : null;
+    var assignments = await loadJson(assignmentsFilePath);
+    console.log(`these are the assignments, ${JSON.stringify(assignments, null, 2)}`);
+    res.render("dashboard.ejs", { name: name, assignments: assignments.assignments });
+});
+// assigning personnel
+app.post('/assign', async (req, res) => {
+    const { id, driver, destination } = req.body;
+  
+    console.log(`Assign request received: id=${id}, driver=${driver}, destination=${destination}`);
+  
+    let assignments = await loadJson(assignmentsFilePath);
+  
+    if (!assignments || !assignments.assignments) {
+        console.error('Assignments data not found or invalid.');
+        return res.json({ success: false });
+    }
+  
+    // Find the assignment by ID and update the driver and destination
+    let assignment = assignments.assignments.find(a => a.id === id);
+    if (assignment) {
+        assignment.driver = driver;
+        assignment.destination = destination;
+  
+        // Save the updated assignments back to the JSON file
+        try {
+            console.log(`Writing updated assignments: ${JSON.stringify(assignments, null, 2)}`);
+            await fs.writeJson(assignmentsFilePath, assignments, { spaces: 2 }); // Adding { spaces: 2 } to format the JSON
+            res.json({ success: true });
+        } catch (error) {
+            console.error('Error writing to JSON file:', error);
+            res.json({ success: false });
+        }
+    } else {
+        console.error(`Assignment with ID ${id} not found.`);
+        res.json({ success: false });
+    }
+});
+  
 //about page
 app.get("/about", (req, res) => {
-  res.render("about.ejs");
+    res.render("about.ejs");
 });
 
 //login route
 app.post("/signIn", async (req, res) => {
-  let email = req.body["email"];
-  let password = req.body["password"];
-  console.log(
-    `here is the email ${email} and here is the password ${password} and here is the key ${key}`
-  );
-  //read user data from the json file
-  let usersData = await loadJson(userFilePath);
-
-  // Check if user exists and password is correct
-  let user =
-    usersData.drivers.find(
-      (user) => user.email === email && user.password === password
-    ) ||
-    usersData.managers.find(
-      (user) => user.email === email && user.password === password
+    let email = req.body["email"];
+    let password = req.body["password"];
+    console.log(
+        `here is the email ${email} and here is the password ${password} and here is the key ${key}`
     );
-
-  if (user) {
-    req.session.user = user; // save user to seeions in browser
-    let name = user.name;
-    console.log(`this is the name, ${name}`);
-    res.redirect("/home");
-  } else {
-    res.send("Invalid email or password");
-  }
+    //read user data from the json file
+    let usersData = await loadJson(userFilePath);
+  
+    // Check if user exists and password is correct
+    let user =
+        usersData.drivers.find(
+            (user) => user.email === email && user.password === password
+        ) ||
+        usersData.managers.find(
+            (user) => user.email === email && user.password === password
+        );
+  
+    if (user) {
+        req.session.user = user; // save user to sessions in browser
+        let name = user.name;
+        console.log(`this is the name, ${name}`);
+        res.redirect("/home");
+    } else {
+        res.send("Invalid email or password");
+    }
 });
 
 app.listen(port, () => {
-  console.log(`The server is up and running on port ${port}`);
+    console.log(`The server is up and running on port ${port}`);
 });
 // Function to generate a random alphabet
 function getRandomAlphabet() {
-  const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  return alphabets[Math.floor(Math.random() * alphabets.length)];
+    const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    return alphabets[Math.floor(Math.random() * alphabets.length)];
 }
 
 // Function to generate a string of random alphabets
 function generateRandomString(length) {
-  let randomString = "";
-  for (let i = 0; i < length; i++) {
-    randomString += getRandomAlphabet();
-  }
-  return randomString;
+    let randomString = "";
+    for (let i = 0; i < length; i++) {
+        randomString += getRandomAlphabet();
+    }
+    return randomString;
 }

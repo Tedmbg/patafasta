@@ -1,58 +1,33 @@
 <%- include("partials/header") %>
 <body class="map-nbr">
-    <div class="container ">
+    <div class="container">
         <div class="row">
-            <di class="col-md-4 left-column">
+            <div class="col-md-4 left-column">
+                <% assignments.forEach(function(assignment) { %>
                 <div class="card mb-3">
                     <div class="card-header nbr">
-                        Package to Nairobi
-                        <span class="status-pending float-end">Pending</span>
+                        <%= assignment.destination %>
+                        <span class="status-<%= assignment.type %> float-end"><%= assignment.type %></span>
                     </div>
-                    <div class="card-body" id="item1">
-                        <h5>Package to Nairobi</h5>
-                        <p>Order ID 123432565#</p>
-                        <p>Customer: James</p>
-                        <p>Car Reg: KDG 125A</p>
-                        <p>Destination: NBR</p>
-                        <p>Departure: 22 July</p>
-                        <img src="https://via.placeholder.com/150" alt="Customer Image" class="customer-img mb-3">
-                        <a href="https://www.google.com/maps/dir/Mombasa/Nairobi/@-2.6661121,35.6019547,7z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x184012e78ec02c7d:0xcb618bbc35d0db5a!2m2!1d39.6682065!2d-4.0434771!1m5!1m1!1s0x182f1172d84d49a7:0xf7cf0254b297924c!2m2!1d36.8219462!2d-1.2920659!3e0?entry=ttu"><button class="google-map-btn">Google Map</button></a>
+                    <div class="card-body">
+                        <h5><%= assignment.destination %></h5>
+                        <p>Order ID: <span class="order-id"><%= assignment.id %></span></p>
+                        <p>Customer: <%= assignment.customer %></p>
+                        <p>Car Reg: <%= assignment.info %></p>
+                        <p>Destination: <%= assignment.destination %></p>
+                        <p>Departure: <%= assignment.departure %></p>
+                        <img src="<%= assignment.imgSrc %>" alt="Customer Image" class="customer-img mb-3">
+                        <a href="<%= assignment.map %>"><button class="google-map-btn">Google Map</button></a>
                         <button class="status-btn">Status</button>
                         <div class="status-dropdown">
-                            <a href="#" class="status-option" data-status="Pending">Pending</a>
-                            <a href="#" class="status-option" data-status="In transit">In transit</a>
-                            <a href="#" class="status-option" data-status="Delivered">Delivered</a>
+                            <a href="/update-status" class="status-option" data-status="pending">Pending</a>
+                            <a href="/update-status" class="status-option" data-status="in-transit">In transit</a>
+                            <a href="/update-status" class="status-option" data-status="in-delivery">Delivered</a>
                         </div>
                     </div>
                 </div>
-                <div class="card mb-3">
-                    <div class="card-header">
-                        Package to Kisumu
-                        <span class="status-pending float-end">Pending</span>
-                    </div>
-                    <div class="card-body" id="item2">
-                        <h5>Package to Kisumu</h5>
-                        <p>Order ID 123432565#</p>
-                        <p>Customer: Agnes</p>
-                        <p>Car Reg: KDQ 125A</p>
-                        <p>Destination: Kisumu</p>
-                        <p>Departure: 22 June</p>
-                        <img src="https://via.placeholder.com/150" alt="Customer Image" class="customer-img mb-3">
-                        <button class="google-map-btn">Google Map</button>
-                        <button class="status-btn">Status</button>
-                        <div class="status-dropdown">
-                            <a href="#" class="status-option" data-status="Pending">Pending</a>
-                            <a href="#" class="status-option" data-status="In transit">In transit</a>
-                            <a href="#" class="status-option" data-status="Delivered">Delivered</a>
-                        </div>
-                    </div>
-                </div>
+                <% }) %>
             </div>
-            <div class="col-md-8">
-                <!-- Right column remains empty to show the background map image -->
-            </div>
-        </div>
-    </div>
             <div class="col-md-8">
                 <!-- Right column remains empty to show the background map image -->
             </div>
@@ -61,15 +36,120 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.2/js/bootstrap.min.js"></script>
-<script
-  type="module"
-  src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-></script>
-<script
-  nomodule
-  src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-></script>
-<script src="/Scripts/main.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script>
+    // Add event listener for status update
+    const statusOptions = document.querySelectorAll(".status-option");
+    statusOptions.forEach((option) => {
+        option.addEventListener("click", async (event) => {
+            event.preventDefault();
+            const newStatus = option.dataset.status;
+            const card = option.closest('.card-body');
+            const assignmentId = card.querySelector('.order-id').textContent.trim();
+
+            if (newStatus === 'in-delivery') {
+                const password = prompt('Enter the password to confirm delivery:');
+                if (password !== '12345') {
+                    alert('Incorrect password. Status not updated.');
+                    return;
+                }
+            }
+
+            const response = await fetch("/update-status", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id: assignmentId, status: newStatus }),
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert("Status updated successfully!");
+
+                // Update the status in the UI without reloading
+                const statusSpan = card.previousElementSibling.querySelector('span');
+                let newClass;
+
+                switch (newStatus) {
+                    case 'pending':
+                        newClass = 'status-pending';
+                        statusSpan.textContent = 'Pending';
+                        statusSpan.className = `float-end ${newClass}`;
+                        break;
+                    case 'in-transit':
+                        newClass = 'status-in-transit';
+                        statusSpan.textContent = 'In transit';
+                        statusSpan.className = `float-end ${newClass}`;
+                        break;
+                    case 'in-delivery':
+                        newClass = 'status-in-delivery';
+                        statusSpan.textContent = 'Delivered';
+                        statusSpan.className = `float-end ${newClass}`;
+                        break;
+                }
+
+                // Hide the dropdown after update
+                option.closest('.status-dropdown').style.display = 'none';
+            } else {
+                alert("Failed to update status.");
+            }
+        });
+    });
+
+    document.querySelectorAll('.card-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const body = header.nextElementSibling;
+            body.classList.toggle('active');
+        });
+    });
+
+    document.querySelectorAll('.status-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const dropdown = this.nextElementSibling;
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    });
+
+    document.querySelectorAll('.status-option').forEach(option => {
+        option.addEventListener('click', function (e) {
+            e.preventDefault();
+            const newStatus = this.getAttribute('data-status');
+            const statusSpan = this.closest('.card-body').previousElementSibling.querySelector('span');
+            let newClass;
+
+            switch (newStatus) {
+                case 'pending':
+                    newClass = 'status-pending';
+                    statusSpan.textContent = 'Pending';
+                    statusSpan.className = `float-end ${newClass}`;
+                    break;
+                case 'in-transit':
+                    newClass = 'status-in-transit';
+                    statusSpan.textContent = 'In transit';
+                    statusSpan.className = `float-end ${newClass}`;
+                    break;
+                case 'in-delivery':
+                    newClass = 'status-in-delivery';
+                    statusSpan.textContent = 'Delivered';
+                    statusSpan.className = `float-end ${newClass}`;
+                    break;
+            }
+
+            this.closest('.status-dropdown').style.display = 'none';
+        });
+    });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!e.target.matches('.status-btn')) {
+            document.querySelectorAll('.status-dropdown').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        }
+    });
+    </script>
 </body>
 </html>
 <%# include('partials/footer.ejs') %>
