@@ -1,4 +1,3 @@
-// get the imports
 import express from "express";
 import bodyParser from "body-parser";
 import fs from "fs-extra";
@@ -12,15 +11,39 @@ const port = 3000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 let key = generateRandomString(20);
 
+var emailError = '';
+
 // Set up session middleware
 app.use(
   session({
-    secret: "key", // replace with your secret key
+    secret: key, // replace with your secret key
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 600000 }, // set to imin
+    cookie: { maxAge: 3000 }, // set to 30 seconds for testing
+    rolling: true, // Enable rolling session
   })
 );
+
+// Endpoint to check session status
+app.get("/checkSession", (req, res) => {
+  if (req.session.user) {
+    res.json({ sessionActive: true });
+  } else {
+    res.json({ sessionActive: false });
+  }
+});
+
+// Endpoint to extend session
+app.get("/extendSession", (req, res) => {
+  if (req.session.user) {
+    req.session.touch(); // This updates the session's expiration time
+    res.json({ sessionExtended: true });
+  } else {
+    res.json({ sessionExtended: false });
+  }
+});
+
+
 
 // access to static files
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,13 +63,21 @@ async function loadJson(filePath) {
   }
 }
 
+// Middleware to check session
+// function checkSession(req, res, next) {
+//   if (!req.session.user) {
+//     return res.redirect('/');
+//   }
+//   next();
+// }
+
 app.get("/", (req, res) => {
-  res.render("login.ejs");
+  res.render("login.ejs", { emailError: '' });
 });
 
-//home page
+// home page
 app.get("/home", (req, res) => {
-    const name = req.session.user ? req.session.user.name : null;// this is an if statement
+    const name = req.session.user ? req.session.user.name : null;
     const sessionID = req.sessionID;
     const role = req.session.user ? req.session.user.role : null;
     let btn_value = "Deliveries";
@@ -56,14 +87,12 @@ app.get("/home", (req, res) => {
         btn_value = "Deliveries";
     }
     console.log(`this is the sessionID ${sessionID} and this is the role ,${role}`);
-  res.render("index.ejs",{name:name,
-    btn_value:btn_value
-  });
+  res.render("index.ejs", { name, btn_value });
 });
 
-// delivery page.
+// delivery page
 app.get("/delivery", (req, res) => {
-    const role = req.session.user ? req.session.user.role : null; // here we are geting user role.
+    const role = req.session.user ? req.session.user.role : null;
     console.log(`This is the user role,${role}`);
    if(role === "Admin"){
     res.render("dashboard.ejs");
@@ -72,19 +101,19 @@ app.get("/delivery", (req, res) => {
    }
 });
 
-//about page
+// about page
 app.get("/about", (req, res) => {
   res.render("about.ejs");
 });
 
-//login route
+// login route
 app.post("/signIn", async (req, res) => {
   let email = req.body["email"];
   let password = req.body["password"];
   console.log(
     `here is the email ${email} and here is the password ${password} and here is the key ${key}`
   );
-  //read user data from the json file
+  // read user data from the json file
   let usersData = await loadJson(userFilePath);
 
   // Check if user exists and password is correct
@@ -97,18 +126,20 @@ app.post("/signIn", async (req, res) => {
     );
 
   if (user) {
-    req.session.user = user; // save user to seeions in browser
+    req.session.user = user; // save user to sessions in browser
     let name = user.name;
     console.log(`this is the name, ${name}`);
     res.redirect("/home");
   } else {
-    res.send("Invalid email or password");
+    emailError = "Invalid email or password! Try Again.";
+    res.render("login.ejs", { emailError: emailError });
   }
 });
 
 app.listen(port, () => {
   console.log(`The server is up and running on port ${port}`);
 });
+
 // Function to generate a random alphabet
 function getRandomAlphabet() {
   const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
