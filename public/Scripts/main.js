@@ -83,6 +83,17 @@ document.addEventListener('click', function (e) {
         });
     }
 });
+//     const signInButton = document.querySelector(".toggle-btn:first-child");
+//     signInButton.classList.add("active-button");
+//     signInButton.classList.remove("not-active");
+// document.querySelector()
+
+
+
+
+
+
+
 
 
 
