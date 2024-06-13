@@ -1,0 +1,55 @@
+<!-- _sessionPopup.ejs -->
+<div id="sessionPopup" class="popup">
+  <span class="close-btn" onclick="closePopup()">×</span>
+  <h2>You will be logged out soon</h2>
+  <p>For your security, we log you out automatically when you have not been active for a certain period of time.</p>
+  <div class="buttons">
+    <button class="logout" onclick="logoutNow()">Log out now</button>
+    <button class="continue" onclick="continueSession()">Continue session</button>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    // Function to check session status
+    function checkSession() {
+      $.get('/checkSession', function(data) {
+        if (!data.sessionActive) {
+          showPopup();
+        }
+      });
+    }
+
+    // Show the popup
+    function showPopup() {
+      $('#sessionPopup').show();
+    }
+
+    // Close the popup
+    window.closePopup = function() {
+      $('#sessionPopup').hide();
+    }
+
+    // Logout now function
+    window.logoutNow = function() {
+      window.location.href = '/logout'; // Change to your logout URL
+    }
+
+    // Continue session function
+    window.continueSession = function() {
+      $('#sessionPopup').hide();
+      $.get('/extendSession', function(data) {
+        if (data.sessionExtended) {
+          // Session extended, you can add any additional logic here if needed
+          console.log("Session extended");
+        } else {
+          // If the session couldn't be extended, redirect to the login page
+          window.location.href = '/';
+        }
+      });
+    }
+
+    // Check session every 30 seconds
+    setInterval(checkSession, 30000); // 30,000 milliseconds = 30 seconds
+  });
+</script>

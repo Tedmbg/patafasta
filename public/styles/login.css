@@ -3,6 +3,18 @@ body {
     margin: 0;
     padding: 0;
 }
+.modal-content {
+    text-align: center;
+  }
+  
+  .modal-body {
+    font-size: 1rem;
+  }
+  
+  .modal-footer .btn {
+    min-width: 100px;
+  }
+  
 
 .form-container {
     display: flex;
