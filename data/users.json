@@ -1,13 +1,13 @@
 {
     "drivers": [
         {
-          "role":"Driver",  
+          "role":"driver",  
           "name":"John",
           "email": "john@patafasta.com",
           "password": "12345"
         },
         {
-          "role":"Driver",
+          "role":"driver",
           "name":"Jane",
           "email": "jane@patafasta.com",
           "password": "12345"

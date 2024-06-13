@@ -1,4 +1,40 @@
 {
-    
-       "assignments":[]
+    "assignments": [
+        {
+            "id": "E138712",
+            "driver": "Not Assigned",
+            "info": "Mazda CX-3",
+            "type": "Pending",
+            "status": "pending",
+            "imgSrc": "/images/mazda.png",
+            "destination": "Nairobi"
+        },
+        {
+            "id": "E138713",
+            "driver": "Not Assigned",
+            "info": "Golf-R",
+            "type": "Pending",
+            "status": "pending",
+            "imgSrc": "/images/golf-r.png",
+            "destination": "Kisumu"
+        },
+        {
+            "id": "E138714",
+            "driver": "Jane Smith",
+            "info": "Prado TX",
+            "type": "In Transit",
+            "status": "in-transit",
+            "imgSrc": "/images/tx.png",
+            "destination": "Eldoret"
+        },
+        {
+            "id": "E138715",
+            "driver": "Alex Johnson",
+            "info": "Audi RS6",
+            "type": "In Delivery",
+            "status": "in-delivery",
+            "imgSrc": "/images/rs6.png",
+            "destination": "Kitui"
+        }
+    ]
 }

@@ -15,10 +15,10 @@ let key = generateRandomString(20);
 // Set up session middleware
 app.use(
   session({
-    secret: "your-secret-key", // replace with your secret key
+    secret: "key", // replace with your secret key
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 60000 }, // set to imin
+    cookie: { maxAge: 600000 }, // set to imin
   })
 );
 
@@ -46,12 +46,30 @@ app.get("/", (req, res) => {
 
 //home page
 app.get("/home", (req, res) => {
-  res.render("index.ejs");
+    const name = req.session.user ? req.session.user.name : null;// this is an if statement
+    const sessionID = req.sessionID;
+    const role = req.session.user ? req.session.user.role : null;
+    let btn_value = "Deliveries";
+    if(role === 'Admin'){
+        btn_value = "Dashboard";
+    }else{
+        btn_value = "Deliveries";
+    }
+    console.log(`this is the sessionID ${sessionID} and this is the role ,${role}`);
+  res.render("index.ejs",{name:name,
+    btn_value:btn_value
+  });
 });
 
 // delivery page.
 app.get("/delivery", (req, res) => {
-  res.render("delivery.ejs");
+    const role = req.session.user ? req.session.user.role : null; // here we are geting user role.
+    console.log(`This is the user role,${role}`);
+   if(role === "Admin"){
+    res.render("dashboard.ejs");
+   } else{
+    res.render("delivery.ejs");
+   }
 });
 
 //about page
@@ -64,7 +82,7 @@ app.post("/signIn", async (req, res) => {
   let email = req.body["email"];
   let password = req.body["password"];
   console.log(
-    `here is the email ${email} and here is the password ${password}`
+    `here is the email ${email} and here is the password ${password} and here is the key ${key}`
   );
   //read user data from the json file
   let usersData = await loadJson(userFilePath);
@@ -80,10 +98,9 @@ app.post("/signIn", async (req, res) => {
 
   if (user) {
     req.session.user = user; // save user to seeions in browser
-    let title = `Welcome, ${user.name}`;
-    res.send("index.ejs", {
-      title: title,
-    });
+    let name = user.name;
+    console.log(`this is the name, ${name}`);
+    res.redirect("/home");
   } else {
     res.send("Invalid email or password");
   }

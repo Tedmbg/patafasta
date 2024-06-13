@@ -13,7 +13,9 @@
           />
         </div>
         <div class="col-lg-6">
-          <h1 class="display-5 fw-bold lh-1 mb-3"><%# title %></h1>
+            <% let greetuser = name ;%>
+            <% let title = `Welcome ,${greetuser}`; %>
+          <h1 class="display-5 fw-bold lh-1 mb-3 text-white"><%= title %></h1>
           <p class="lead">
             Your dedication turns each delivery into a moment of joy for our
             customers. Every car you deliver adds value to their lives. Keep up
@@ -21,9 +23,9 @@
             excellence. Drive safe and keep making a difference! 🚗✨
           </p>
           <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-            <button type="button" href="/delivery" class="btn btn-primary btn-lg px-4 me-md-2">
-              Deliveries
-            </button>
+            <a href="/delivery"><button type="button" class="btn btn-primary btn-lg px-4 me-md-2">
+              <%= btn_value %>
+            </button></a>
             <!-- <button type="button" class="btn btn-outline-secondary btn-lg px-4">
               Conpleted
             </button> -->

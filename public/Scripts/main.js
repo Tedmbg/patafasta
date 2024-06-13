@@ -42,7 +42,7 @@ document.querySelectorAll('.status-option').forEach(option => {
     option.addEventListener('click', function (e) {
         e.preventDefault();
         const newStatus = this.getAttribute('data-status');
-        const statusSpan = this.closest('.card-body').previousElementSibling.querySelector('span');
+        const statusSpan = this.closest('.card-body-delivery').previousElementSibling.querySelector('span');
         let newClass;
 
         switch (newStatus) {
@@ -90,7 +90,63 @@ document.addEventListener('click', function (e) {
 
 
 
+//dashboard.js
+  // Example data
+  const cars = [
+    { id: 'E138712', driver: 'Not Assigned', info: 'Mazda CX-3', type: 'Pending', status: 'pending', imgSrc: './assets/mazda.png', destination: "Nairobi" },
+    { id: 'E138713', driver: 'Not Assigned', info: 'Golf-R', type: 'Pending', status: 'pending', imgSrc: './assets/golf-r.png', destination: "Kisumu" },
+    { id: 'E138714', driver: 'Jane Smith', info: 'Prado TX', type: 'In Transit', status: 'in-transit', imgSrc: './assets/tx.png', destination: "Eldoret" },
+    { id: 'E138715', driver: 'Alex Johnson', info: 'Audi RS6', type: 'In Delivery', status: 'in-delivery', imgSrc: './assets/rs6.png', destination: "Kitui" }
+];
 
+function generateCarList() {
+    const carList = document.getElementById('car-list');
+    cars.forEach(car => {
+        const listItem = document.createElement('a');
+        listItem.href = '#';
+        listItem.className = 'list-group-item list-group-item-action d-flex align-items-center';
+        listItem.dataset.carId = car.id;
+        listItem.innerHTML = `
+            <img src="${car.imgSrc}" alt="${car.info}" class="car-icon">
+            <div>
+                <h6>${car.id}</h6>
+                <p>${car.info}</p>
+            </div>
+            <span class="badge ${car.status === 'in-delivery' ? 'status-in-delivery' : car.status === 'in-transit' ? 'status-in-transit' : 'status-in-pending'}">${car.type}</span>
+        `;
+        listItem.addEventListener('click', () => loadCarDetails(car));
+        carList.appendChild(listItem);
+    });
+}
+
+function loadCarDetails(car) {
+    document.getElementById('shipping-id').textContent = car.id;
+    const driverDiv = document.querySelectorAll('.card-body')[1];
+    driverDiv.innerHTML = ''; // Clear the existing content
+    
+    // Append the new content
+    driverDiv.innerHTML = `
+        <div>
+            <h6>Driver:</h6>
+            <img src="./assets/user-profile.png" alt="shipping-icon" class="icon">
+        </div>
+        <button class="btn btn-link p-0 assign-button" data-bs-toggle="modal" data-bs-target="#assignModal">Assign Driver</button>
+    `;
+    
+    document.getElementById('truck-info').textContent = car.info;
+    document.getElementById('truck-destination').textContent = car.destination;
+
+    // Update the car type input field in the modal
+    document.getElementById('carType').value = car.info;
+    document.getElementById('carID').value = car.id;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    generateCarList();
+    if (cars.length > 0) {
+        loadCarDetails(cars[0]); // Load the details of the first car
+    }
+});
 
 
 
