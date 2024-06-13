@@ -1,0 +1,123 @@
+
+
+.map-kitui {
+    background-image: url('/images/kitui.png'); /* Replace with your image path */
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* background-position:center; */
+    color: #7ed6ea;
+}
+.map-eldy {
+    background-image: url('/images/eldy.png'); /* Replace with your image path */
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* background-position:center; */
+    color: #7ed6ea;
+}
+.map-nbr {
+    background-image: url('/images/nbr.png'); /* Replace with your image path */
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* background-position:center; */
+    color: #7ed6ea;
+}
+.map-ksm {
+    background-image: url('/images/kisumu.png'); /* Replace with your image path */
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* background-position:center; */
+    color: #7ed6ea;
+}
+.card {
+    background-color: rgba(0, 0, 0, 0.8);
+    color:white;
+}
+
+.card-header {
+    cursor: pointer;
+}
+
+.status-pending {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.status-transit {
+    background-color: yellow;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.status-delivered {
+    background-color: green;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.card-body {
+    display: none;
+}
+
+.card-body.active {
+    display: block;
+    background-color:#0d6efd;
+}
+
+.google-map-btn,
+.complete-delivery-btn,.status-btn {
+    border: none;
+    color: white;
+    border-radius: 15px;
+    padding: 5px 15px;
+}
+
+.google-map-btn {
+    background-color: #00bfff;
+}
+.status-btn {
+    background-color: #40e0d0;
+    position: relative;
+}
+
+.status-dropdown {
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background-color: #40e0d0;
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.status-dropdown a {
+    color: white;
+    display: block;
+    padding: 5px 15px;
+    text-decoration: none;
+    border-bottom: 1px solid #00bfff;
+}
+
+.status-dropdown a:last-child {
+    border-bottom: none;
+}
+
+.status-dropdown a:hover {
+    background-color: #00bfff;
+}
+
+.complete-delivery-btn {
+    background-color: #40e0d0;
+}
+
+.customer-img {
+    width: 100%;
+    border-radius: 15px;
+}
+
+.left-column {
+    max-width: 500px;
+}

@@ -1,0 +1,25 @@
+{
+    "drivers": [
+        {
+          "role":"Driver",  
+          "name":"John",
+          "email": "john@patafasta.com",
+          "password": "12345"
+        },
+        {
+          "role":"Driver",
+          "name":"Jane",
+          "email": "jane@patafasta.com",
+          "password": "12345"
+        }
+     
+      ],
+      "managers": [
+        {
+          "role":"Admin",
+          "name":"Andrew",
+          "email": "andrew@patafasta.com",
+          "password": "12345"
+        }
+      ]
+}
