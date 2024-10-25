@@ -19,8 +19,8 @@ app.use(
     secret: key, // replace with your secret key
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 6000000 }, // set to imin
-    cookie: { maxAge: 3000 }, // set to 30 seconds for testing
+    cookie: { maxAge: 60000000 }, // set to 1 min
+    // cookie: { maxAge: 3000 }
     rolling: true, // Enable rolling session
   })
 );
@@ -49,10 +49,10 @@ app.get("/extendSession", (req, res) => {
 // access to static files
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // to parse JSON bodies
-app.use(express.static("public"));
+app.use(express.static("public")); // enable use to access static pages.
 
 // path to the json files
-const userFilePath = path.join(__dirname, "data", "users.json");
+const userFilePath = path.join(__dirname, "data", "users.json");// create path to the json
 const assignmentsFilePath = path.join(__dirname, 'data', 'cars.json');
 
 // Load JSON data
@@ -79,6 +79,9 @@ app.get("/", (req, res) => {
 
 // home page
 app.get("/home", (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/');
+      }
     const name = req.session.user ? req.session.user.name : null;
     const sessionID = req.sessionID;
     const role = req.session.user ? req.session.user.role : null;
@@ -95,6 +98,7 @@ app.get("/home", (req, res) => {
 // delivery page
 app.get("/delivery", async (req, res) => {
     const role = req.session.user ? req.session.user.role : null;
+    const driverName = req.session.user ? req.session.user.name :null;
     console.log(`This is the user role,${role}`);
     const assignments = await loadJson(assignmentsFilePath);
 

@@ -14,8 +14,8 @@
         </div>
         <div class="col-lg-6">
             <% let greetuser = name ;%>
-            <% let title = `Welcome ,${greetuser}`; %>
-          <h1 class="display-5 fw-bold lh-1 mb-3 text-white"><%= title %></h1>
+            <% let title = name ? `Welcome, ${name}`:'Welcome'; %>
+          <h1 class="display-5 fw-bold lh-1 mb-3 text-white"> <%= title %></h1>
           <p class="lead">
             Your dedication turns each delivery into a moment of joy for our
             customers. Every car you deliver adds value to their lives. Keep up

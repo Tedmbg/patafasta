@@ -5,12 +5,12 @@
       "name": "Jane",
       "customer": "Isaac wamashorez",
       "info": "Mazda CX-3",
-      "type": "in-transit",
+      "type": "pending",
       "departure": "18 May 2024",
-      "status": "in-transit",
+      "status": "pending",
       "imgSrc": "/images/mazda.png",
-      "destination": "Kitui",
-      "driver": "John Kamau",
+      "destination": "Nairobi",
+      "driver": "Jane Isac",
       "map": "https://www.google.com/maps/dir/Mombasa/Kitui/@-2.692426,37.1075692,8z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x184012e78ec02c7d:0xcb618bbc35d0db5a!2m2!1d39.6682065!2d-4.0434771!1m5!1m1!1s0x1824530d84646925:0xb8f48c669c84e6fb!2m2!1d37.9952144!2d-1.3750813!3e0?entry=ttu"
     },
     {
@@ -19,11 +19,11 @@
       "customer": "Yobra msani",
       "departure": "12 Jun 2024",
       "info": "Golf-R",
-      "type": "in-delivery",
-      "status": "in-delivery",
+      "type": "pending",
+      "status": "pending",
       "imgSrc": "/images/golf-r.png",
-      "destination": "Nairobi",
-      "driver": "Jane Isac",
+      "destination": "Eldoret",
+      "driver": "John Kamau",
       "map": "https://www.google.com/maps/dir/Mombasa/Nairobi/@-2.6661121,35.6019547,7z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x184012e78ec02c7d:0xcb618bbc35d0db5a!2m2!1d39.6682065!2d-4.0434771!1m5!1m1!1s0x182f1172d84d49a7:0xf7cf0254b297924c!2m2!1d36.8219462!2d-1.2920659!3e0?entry=ttu"
     },
     {
@@ -32,11 +32,12 @@
       "customer": "Mark Kimutai",
       "info": "Prado TX",
       "departure": "8 July 2024",
-      "type": "In Transit",
-      "status": "in-transit",
+      "type": "pending",
+      "status": "pending",
       "imgSrc": "/images/tx.png",
-      "destination": "Eldoret",
-      "map": "https://www.google.com/maps/dir//Eldoret/@-1.7653052,34.7304121,7z/data=!4m9!4m8!1m0!1m5!1m1!1s0x178101ae37f9f535:0xe2db337df0fc0820!2m2!1d35.2697802!2d0.5142775!3e0?entry=ttu"
+      "destination": "Kisumu",
+      "map": "https://www.google.com/maps/dir//Eldoret/@-1.7653052,34.7304121,7z/data=!4m9!4m8!1m0!1m5!1m1!1s0x178101ae37f9f535:0xe2db337df0fc0820!2m2!1d35.2697802!2d0.5142775!3e0?entry=ttu",
+      "driver": "Jane Isac"
     },
     {
       "id": "E138715",
@@ -44,11 +45,12 @@
       "customer": "Rolex luke",
       "departure": "1 Aug 2024",
       "info": "Audi RS6",
-      "type": "In Delivery",
-      "status": "in-delivery",
+      "type": "pending",
+      "status": "pending",
       "imgSrc": "/images/rs6.png",
-      "destination": "Kitui",
-      "map": "https://www.google.com/maps/dir//Eldoret/@-1.7653052,34.7304121,7z/data=!4m9!4m8!1m0!1m5!1m1!1s0x178101ae37f9f535:0xe2db337df0fc0820!2m2!1d35.2697802!2d0.5142775!3e0?entry=ttu"
+      "destination": "Nairobi",
+      "map": "https://www.google.com/maps/dir//Eldoret/@-1.7653052,34.7304121,7z/data=!4m9!4m8!1m0!1m5!1m1!1s0x178101ae37f9f535:0xe2db337df0fc0820!2m2!1d35.2697802!2d0.5142775!3e0?entry=ttu",
+      "driver": "John Kamau"
     }
   ]
 }
